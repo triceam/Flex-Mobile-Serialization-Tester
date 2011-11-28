@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="Summary" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		viewActivate="view1_viewActivateHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import spark.events.ViewNavigatorEvent;
+			
+			protected function view1_viewActivateHandler(event:ViewNavigatorEvent):void
+			{
+				chart.dataProvider = data.chartResults;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<mx:Legend dataProvider="{ chart }" direction="horizontal" />
+	
+	<mx:ColumnChart id="chart"
+					seriesFilters="{ [] }" 
+					width="100%" height="100%">
+		
+		<mx:horizontalAxis>
+			<mx:CategoryAxis categoryField="iteration"
+							 title="Test Iteration" />
+		</mx:horizontalAxis>
+		
+		<mx:verticalAxis>
+			<mx:LinearAxis title="Duration (ms)" />
+		</mx:verticalAxis>
+		
+		<mx:series>
+			<mx:ColumnSeries 
+				xField="iteration" 
+				yField="amfDuration{ spinner.selectedItem.value }" 
+				displayName="AMF x { spinner.selectedItem.value }" />
+			<mx:ColumnSeries 
+				xField="iteration" 
+				yField="jsonDuration{ spinner.selectedItem.value }" 
+				displayName="JSON x { spinner.selectedItem.value }"
+				/>
+		</mx:series>
+	</mx:ColumnChart>
+	
+	<s:SpinnerListContainer width="100%" >
+		<s:SpinnerList id="spinner" width="100%" selectedIndex="0">
+			<s:dataProvider>
+				<s:ArrayCollection>
+					<fx:Array>
+						<fx:Object label="x1 Record" value="1" />
+						<fx:Object label="x10 Record" value="10" />
+						<fx:Object label="x100 Record" value="100" />
+						<fx:Object label="x1000 Record" value="1000" />
+						<fx:Object label="x10000 Record" value="10000" />
+					</fx:Array>
+				</s:ArrayCollection>
+			</s:dataProvider>
+		</s:SpinnerList>
+	</s:SpinnerListContainer>
+	
+	<s:layout>
+		<s:VerticalLayout />
+	</s:layout>
+	
+</s:View>

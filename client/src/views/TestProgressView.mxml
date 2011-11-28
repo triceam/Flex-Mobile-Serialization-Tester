@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Progress"
+		viewActivate="view1_viewActivateHandler(event)"
+		viewDeactivate="view1_viewDeactivateHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import control.SerializationTestController;
+			import control.TestProgressEvent;
+			import control.TestUpdateEvent;
+			
+			import model.TestVO;
+			
+			import spark.events.ViewNavigatorEvent;
+			
+			private var controller : SerializationTestController;
+			private var lastIteration : int;
+			
+			protected function view1_viewActivateHandler(event:ViewNavigatorEvent):void
+			{
+				controller = data as SerializationTestController;
+				controller.addEventListener( TestUpdateEvent.TEST_UPDATE, onTestUpdate );
+				controller.addEventListener( TestUpdateEvent.TEST_STATUS, onTestStatus );
+				controller.addEventListener( TestProgressEvent.PROGRESS, onTestProgress );
+			}
+			
+			protected function view1_viewDeactivateHandler(event:ViewNavigatorEvent):void
+			{
+				controller.removeEventListener( TestUpdateEvent.TEST_UPDATE, onTestUpdate );
+				controller.removeEventListener( TestUpdateEvent.TEST_STATUS, onTestStatus );
+				controller.removeEventListener( TestProgressEvent.PROGRESS, onTestProgress );
+				controller = null;
+			}
+			
+			private function onTestUpdate( event : TestUpdateEvent ) : void
+			{
+				overallProgress.width = (overallContainer.width-4) * (event.vo.iteration / SerializationTestController.ITERATIONS);
+				
+				if ( lastIteration != event.vo.iteration )
+				{
+					amfProgress.width = 0;
+					jsonProgress.width = 0;
+					lastIteration = event.vo.iteration;
+				}
+				
+				if ( event.vo.type == TestVO.TYPE_AMF )
+					amfProgress.width = (amfContainer.width-4) * (event.vo.recordIndex / (SerializationTestController.RECORD_COUNT.length-1));
+				if ( event.vo.type == TestVO.TYPE_JSON )
+					jsonProgress.width = (jsonContainer.width-4) * (event.vo.recordIndex / (SerializationTestController.RECORD_COUNT.length-1));
+				
+			}
+			
+			private function onTestStatus( event : TestUpdateEvent ) : void
+			{
+				if ( !controller.testing )
+				{
+					navigator.pushView( SummaryView, controller );
+				}
+			}
+			
+			private function onTestProgress( event : TestProgressEvent ) : void
+			{
+				progress.text = event.message + "\n";
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
+	</s:layout>
+	
+	
+	<s:Label text="Overall Progress:" fontWeight="bold" />
+	
+	<s:HGroup width="100%" verticalAlign="middle">
+		
+		<s:Group width="100%" id="overallContainer">
+			<s:Rect width="100%" radiusX="10" radiusY="10" height="20">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xDDDDDD" ratio="0" />
+						<s:GradientEntry color="0x999999" ratio="1" />
+					</s:LinearGradient>
+				</s:fill>
+				<s:stroke>
+					<s:SolidColorStroke color="0x333333" weight="2" />
+				</s:stroke>
+			</s:Rect>
+			
+			<s:Rect radiusX="8" radiusY="8" x="1" y="1" height="18"
+					id="overallProgress">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0x00FF00" ratio="0" />
+						<s:GradientEntry color="0x006600" ratio="1" />
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+		</s:Group>
+		
+		<s:BusyIndicator />
+		
+	</s:HGroup>
+	
+	<s:Spacer height="15" />
+	<s:Line width="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0x666666" weight="1" />
+		</s:stroke>
+	</s:Line>
+	<s:Spacer height="15" />
+	
+	<s:Label text="AMF Test:" />
+	<s:Group width="100%" id="amfContainer">
+		<s:Rect width="100%" radiusX="10" radiusY="10" height="20">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0xDDDDDD" ratio="0" />
+					<s:GradientEntry color="0x999999" ratio="1" />
+				</s:LinearGradient>
+			</s:fill>
+			<s:stroke>
+				<s:SolidColorStroke color="0x333333" weight="2" />
+			</s:stroke>
+		</s:Rect>
+		
+		<s:Rect radiusX="8" radiusY="8" x="1" y="1" height="18"
+				id="amfProgress">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0xFF0000" ratio="0" />
+					<s:GradientEntry color="0x660000" ratio="1" />
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+	</s:Group>
+	
+	<s:Spacer height="15" />
+	
+	<s:Label text="JSON Test:" />
+	<s:Group width="100%" id="jsonContainer">
+		<s:Rect width="100%" radiusX="10" radiusY="10" height="20">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0xDDDDDD" ratio="0" />
+					<s:GradientEntry color="0x999999" ratio="1" />
+				</s:LinearGradient>
+			</s:fill>
+			<s:stroke>
+				<s:SolidColorStroke color="0x333333" weight="2" />
+			</s:stroke>
+		</s:Rect>
+		
+		<s:Rect radiusX="8" radiusY="8" x="1" y="1" height="18"
+				id="jsonProgress">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0x0000FF" ratio="0" />
+					<s:GradientEntry color="0x000066" ratio="1" />
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+	</s:Group>
+	
+	
+	<s:Spacer height="15" />
+	<s:Line width="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0x666666" weight="1" />
+		</s:stroke>
+	</s:Line>
+	<s:Spacer height="15" />
+	
+	<s:Scroller id="scroller" width="100%" height="100%">
+		<s:Group>
+			<s:Label id="progress" />
+		</s:Group>
+	</s:Scroller>
+	
+	
+</s:View>

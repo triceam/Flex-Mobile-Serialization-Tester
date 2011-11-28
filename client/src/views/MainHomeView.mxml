@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="JSON vs. AMF Serialization" 
+		xmlns:control="control.*"
+		destructionPolicy="never">
+	
+	<fx:Script>
+		<![CDATA[
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				controller.startTest();
+				navigator.pushView( TestProgressView, controller );
+			}
+		]]>
+	</fx:Script>
+	
+	
+	
+	<fx:Declarations>
+		
+		<control:SerializationTestController id="controller" />
+		
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
+	</s:layout>
+	
+	<s:Label maxWidth="{ width-20 }" text="This test will make 5 iterations of remote method calls to the server to compare data serialization performance between AMF and JSON on mobile devices.  Each iteration will request 1, 10, 100, 1000, and then 10000 objects from the server; first in AMF, followed by JSON serialization format.  Click 'Begin Test' to start." />
+	
+	<s:Button label="Begin Test" click="button1_clickHandler(event)" />
+	
+</s:View>
