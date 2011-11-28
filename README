@@ -1,0 +1,6 @@
+The Flex Mobile Serialization Testing application is a basic test case where a mobile app makes requests of simple data objects from a ColdFusion CFC.  In each test iteration, a request is made for 1, 10, 100, 1000, and 10000 value objects, in both AMF and JSON formats. The total round trip time from request to deserialization is measured and compared for each case, for a total of 5 iterations through each cycle.   The application displays end-to-end performance metrics for both AMF and JSON requests.
+
+You can read more about this application at:
+http://www.tricedesigns.com/2011/11/07/amf-vs-json-in-air-mobile-applications/
+
+This application was built using Adobe Flex 4.6 and Adobe AIR 3.1
